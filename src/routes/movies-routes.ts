@@ -1,16 +1,31 @@
 import express from "express";
-import Movies from "../models/movies";
+import Movies from "../models/Movies";
 const moviesRoutes = express.Router();
 
 const moviesArray: Movies[] = [
-    { id: 100, title: "Scary Movie", year: 4.5, animated: false },
-    { id: 200, title: "Very Scary Movie", year: 3.4, animated: false },
-    { id: 300, title: "Funny Movie", year: 4.3, animated: true },
-    { id: 400, title: "Very Funny Movie", year: 3.8, animated: true }
+    { id: 100, title: "Scary Movie", year: 2021, animated: false },
+    { id: 200, title: "Very Scary Movie", year: 2022, animated: false },
+    { id: 300, title: "Funny Movie", year: 2022, animated: true },
+    { id: 400, title: "Very Funny Movie", year: 2022, animated: true }
 ];
 
 moviesRoutes.get("/", function (req, res) {
-    res.json(moviesRoutes)
+    let maxYear = Number.parseInt(req.query.maxYear as string);
+    let minYear = Number.parseInt(req.query.minYear as string);
+
+    if (minYear && maxYear) {
+        let newEmptyMovieArray: Movies[] = [];
+        for (let i = 0; i < moviesArray.length; i++) {
+            if (moviesArray[i].year > minYear && moviesArray[i].year < maxYear) {
+                newEmptyMovieArray.push(moviesArray[i]);
+            }
+        }
+    res.json(newEmptyMovieArray)
+    } else {
+        res.json(moviesArray)
+    }
+
+    
 })
 
 moviesRoutes.get("/:id", function (req, res) {
